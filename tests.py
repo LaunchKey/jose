@@ -122,7 +122,7 @@ class TestSerializeDeserialize(unittest.TestCase):
 
 class TestJWE(unittest.TestCase):
     encs = ('A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512')
-    algs = (('RSA-OAEP', rsa_key),)
+    algs = (('RSA-OAEP', rsa_key), ('RSA-OAEP-256', rsa_key))
 
     def test_jwe(self):
         bad_key = {'k': RSA.generate(2048).exportKey('PEM')}
@@ -320,7 +320,7 @@ class TestJWE(unittest.TestCase):
 
 class TestSpecCompliantJWE(unittest.TestCase):
     encs = ('A128CBC-HS256', 'A192CBC-HS384', 'A256CBC-HS512')
-    algs = (('RSA-OAEP', rsa_key),)
+    algs = (('RSA-OAEP', rsa_key), ('RSA-OAEP-256', rsa_key))
 
     def test_jwe(self):
         bad_key = {'k': RSA.generate(2048).exportKey('PEM')}
@@ -666,7 +666,7 @@ class TestJWA(unittest.TestCase):
     def test_lookup(self):
         impl = jose._JWA._impl
         jose._JWA._impl = dict((k, k) for k in (
-            'HS256', 'RSA-OAEP', 'A128CBC', 'A128CBC'))
+            'HS256', 'RSA-OAEP', 'RSA-OAEP-256', 'A128CBC', 'A128CBC'))
 
         self.assertEqual(jose.JWA['HS256'], 'HS256')
         self.assertEqual(jose.JWA['RSA-OAEP'], 'RSA-OAEP')

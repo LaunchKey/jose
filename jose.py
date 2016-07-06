@@ -557,9 +557,20 @@ def encrypt_oaep(plaintext, jwk):
     return PKCS1_OAEP.new(RSA.importKey(jwk['k'])).encrypt(plaintext)
 
 
+def encrypt_oaep_256(plaintext, jwk):
+    return PKCS1_OAEP.new(RSA.importKey(jwk['k']), hashAlgo=SHA256).encrypt(plaintext)
+
+
 def decrypt_oaep(ciphertext, jwk):
     try:
         return PKCS1_OAEP.new(RSA.importKey(jwk['k'])).decrypt(ciphertext)
+    except ValueError as e:
+        raise Error(e.args[0])
+
+
+def decrypt_oaep_256(ciphertext, jwk):
+    try:
+        return PKCS1_OAEP.new(RSA.importKey(jwk['k']), hashAlgo=SHA256).decrypt(ciphertext)
     except ValueError as e:
         raise Error(e.args[0])
 
@@ -631,6 +642,7 @@ class _JWA(object):
         'RS384': ((rsa_sign, rsa_verify), SHA384),
         'RS512': ((rsa_sign, rsa_verify), SHA512),
         'RSA-OAEP': ((encrypt_oaep, decrypt_oaep), 2048),
+        'RSA-OAEP-256': ((encrypt_oaep_256, decrypt_oaep_256), 2048),
 
         'A128CBC': ((encrypt_aescbc, decrypt_aescbc), 128),
         'A192CBC': ((encrypt_aescbc, decrypt_aescbc), 192),
