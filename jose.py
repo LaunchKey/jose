@@ -414,7 +414,7 @@ def spec_compliant_decrypt(jwe, jwk, validate_claims=True,
 
     # verify authentication tag
     expected_tag = _generate_authentication_tag(
-        mac_key, json_encode(header), ciphertext, iv, enc
+        mac_key, protected_header, ciphertext, iv, enc
     )
     if not const_compare(expected_tag, authentication_tag):
         raise Error('Mismatched authentication tags')
