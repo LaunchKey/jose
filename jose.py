@@ -282,7 +282,7 @@ def spec_compliant_encrypt(claims, jwk, add_header=None, alg='RSA-OAEP',
     iv = _generate_iv(enc, rng)
 
     # 4. Generate payload
-    plaintext = json_encode(claims)
+    plaintext = _json_encode(claims)
     # Compress if needed
     if HEADER_ZIP in header:
         try:
@@ -732,6 +732,8 @@ def _validate(claims, validate_claims, expiry_seconds):
         expiration_time = claims[CLAIM_EXPIRATION_TIME]
     except KeyError:
         pass
+    except TypeError:
+        pass
     else:
         _check_expiration_time(now, expiration_time)
 
@@ -742,6 +744,8 @@ def _validate(claims, validate_claims, expiry_seconds):
     try:
         issued_at = claims[CLAIM_ISSUED_AT]
     except KeyError:
+        pass
+    except TypeError:
         pass
     else:
         if expiry_seconds is not None:
@@ -754,6 +758,8 @@ def _validate(claims, validate_claims, expiry_seconds):
     try:
         not_before = claims[CLAIM_NOT_BEFORE]
     except KeyError:
+        pass
+    except TypeError:
         pass
     else:
         _check_not_before(now, not_before)
